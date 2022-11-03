@@ -11,7 +11,42 @@ import matplotlib.ticker as ticker
 
 import seaborn as sns
 
+# general plot configuration
+SMALL_SIZE = 10
+MEDIUM_SIZE = 16
+LARGE_SIZE = 20
+HUGE_SIZE = 24
+FIG_SIZE = (22, 8)
 
+def init_plotting():
+    # Matplotlib
+    plt.rc('figure', figsize=FIG_SIZE)        # default figure size
+    plt.rc('figure', titlesize=HUGE_SIZE)     # fontsize of the figure title
+    plt.rc('figure', titleweight='bold')      # weight of the figure title
+    #plt.rc('font', size=MEDIUM_SIZE)          # default text sizes
+    #plt.rc('axes', titlesize=LARGE_SIZE)      # fontsize of the axes title
+    #plt.rc('axes', titleweight='bold')        # weight of the axes title
+    #plt.rc('axes', labelsize=MEDIUM_SIZE)     # fontsize of the x and y labels
+    #plt.rc('xtick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
+    #plt.rc('ytick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
+    #plt.rc('legend', fontsize=MEDIUM_SIZE)    # legend fontsize
+    plt.rc('legend', title_fontsize=MEDIUM_SIZE)    # legend fontsize
+    
+    # Seaborn
+    sns.set(rc={"figure.figsize": FIG_SIZE,
+                "figure.titlesize": HUGE_SIZE,
+                "figure.titleweight": 'bold',
+    #            "font.size": MEDIUM_SIZE,
+    #            "axes.titlesize": LARGE_SIZE,
+    #            "axes.titleweight": 'bold',
+    #            "axes.labelsize": MEDIUM_SIZE,
+    #            "xtick.labelsize": MEDIUM_SIZE,
+    #            "ytick.labelsize": MEDIUM_SIZE,
+    #            "legend.fontsize": MEDIUM_SIZE,
+                "legend.title_fontsize": MEDIUM_SIZE,
+               })    
+
+    
 def plot_embedding_targets(X_embedded, y, alpha=1., palette=None):
     fig = sns.set(rc={'figure.figsize':(14,14)})
     
@@ -56,33 +91,24 @@ def plot_classwise_dist(df, label_col):
     return fig
 
 
-def plot_classwise_kde(df, label_col, feature_idx=0, focus=-1):
+def plot_classwise_kde(df, label_col, labels, palette, legend_entries, feature_idx=0, focus=-1):
     focus_label = 'None'
 
     x = df.columns[feature_idx]
-    # todo: do only once
-    # get all unique labels
-    cntr = Counter(df[label_col])
-    labels = list(cntr.keys())
-
-    # we want a legend with formatted strings
-    legend_entries = [f"{item:.2f}" for item in list(cntr.keys())]
-    palette = sns.color_palette("bright", len(cntr.keys()))
-
     
     if focus>=0:
         focus_label = labels[focus]
 
     for i, (key, group) in enumerate(df.groupby(label_col)):
-        lw = 1
+        lw = None # default linewidth
         # plot focused kde with thicker line
         if key == focus_label:
-            lw = 5
+            lw = 5 # focused linewidth
         fig = sns.kdeplot(data=group, x=x,
                     linewidth=lw,
                     color=palette[i])
         
+    #plt.title(f"feature: {x}, focus: {focus_label}")
     plt.legend(legend_entries, ncol=3, loc='best', title=label_col)
-    plt.title(f"feature: {x}, focus: {focus_label}");
     
     return fig
