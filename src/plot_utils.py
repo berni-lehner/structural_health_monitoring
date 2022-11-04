@@ -48,7 +48,7 @@ def init_plotting():
 
     
 def plot_embedding_targets(X_embedded, y, alpha=1., palette=None):
-    fig = sns.set(rc={'figure.figsize':(14,14)})
+    fig = plt.figure()
     
     if palette is None:
         cntr = Counter(y)
@@ -61,9 +61,10 @@ def plot_embedding_targets(X_embedded, y, alpha=1., palette=None):
 
 
 def plot_classwise_dist(df, label_col):
+    fig = plt.figure()
+    
     # get all unique labels
     cntr = Counter(df[label_col])
-    cntr.keys()
 
     # we want a legend for mean and std for each class
     legend_entries = [[f"{item:.2f}_mean", f"{item:.2f}_std"] for item in list(cntr.keys())]
@@ -82,7 +83,7 @@ def plot_classwise_dist(df, label_col):
         upper_bound = mean_spec+std_spec
 
         # plot mean values
-        fig = sns.lineplot(x=range(len(mean_spec)), y=mean_spec, color=palette[i])
+        sns.lineplot(x=range(len(mean_spec)), y=mean_spec, color=palette[i])
         # plot std values
         plt.fill_between(range(len(mean_spec)), lower_bound, upper_bound, color=palette[i], alpha=.1)
 
@@ -91,7 +92,7 @@ def plot_classwise_dist(df, label_col):
     return fig
 
 
-def plot_classwise_kde(df, label_col, labels, palette, legend_entries, feature_idx=0, focus=-1):
+def plot_classwise_kde(df, label_col, labels, palette, legend_entries, feature_idx=0, focus=-1):    
     focus_label = 'None'
 
     x = df.columns[feature_idx]
@@ -104,11 +105,11 @@ def plot_classwise_kde(df, label_col, labels, palette, legend_entries, feature_i
         # plot focused kde with thicker line
         if key == focus_label:
             lw = 5 # focused linewidth
+        
         fig = sns.kdeplot(data=group, x=x,
                     linewidth=lw,
                     color=palette[i])
         
-    #plt.title(f"feature: {x}, focus: {focus_label}")
     plt.legend(legend_entries, ncol=3, loc='best', title=label_col)
     
     return fig
