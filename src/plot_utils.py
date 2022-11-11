@@ -54,7 +54,7 @@ def plot_embedding_targets(X_embedded, y, alpha=1., palette=None):
     if palette is None:
         palette = sns.color_palette("bright", len(cntr.keys()))
 
-    sns.scatterplot(x=X_embedded[:,0], y=X_embedded[:,1], hue=y, hue_order=cntr.keys(),
+    sns.scatterplot(x=X_embedded[:,0], y=X_embedded[:,1], hue=y,
                     legend='full', palette=palette, alpha=alpha)
     
     return fig
