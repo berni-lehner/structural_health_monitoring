@@ -54,45 +54,45 @@ def plot_embedding_targets(X_embedded, y, alpha=1., palette=None):
         cntr = Counter(y)
         palette = sns.color_palette("bright", len(cntr.keys()))
 
-    sns.scatterplot(x=X_embedded[:,0], y=X_embedded[:,1], hue=y, legend='full', palette=palette, alpha=alpha)
+    sns.scatterplot(x=X_embedded[:,0], y=X_embedded[:,1], hue=y, legend='full',
+                    palette=palette, alpha=alpha)
     
     return fig
 
 
 
-def plot_classwise_dist(df, label_col):
+def plot_classwise_dist(df, label_col=None, palette=None):
     fig = plt.figure()
     
+    # last column contains the labels if not handled otherwise
+    if label_col is None:
+        label_col = df.columns[-1]
+        
     # get all unique labels
     cntr = Counter(df[label_col])
 
-    # we want a legend for mean and std for each class
-    legend_entries = [[f"{item:.2f}_mean", f"{item:.2f}_std"] for item in list(cntr.keys())]
-
-    # flatten legend entry list
-    legend_entries = list(itertools.chain(*legend_entries))
-
-    # create palette, so we can use the same color for the mean and std for each class
-    palette = sns.color_palette("bright", len(cntr.keys()))
+    if palette is None:
+        palette = sns.color_palette("bright", len(cntr.keys()))
 
     for i, (key, group) in enumerate(df.groupby(label_col)):
+        # plot mean values
         mean_spec = group.drop(columns=label_col).mean(axis=0)
-        std_spec = group.drop(columns=label_col).std(axis=0)
+        sns.lineplot(x=range(len(mean_spec)), y=mean_spec, color=palette[i],
+                     label=f"{key:.2f}_mean")
 
+        # plot std values
+        std_spec = group.drop(columns=label_col).std(axis=0)
         lower_bound = mean_spec-std_spec
         upper_bound = mean_spec+std_spec
-
-        # plot mean values
-        sns.lineplot(x=range(len(mean_spec)), y=mean_spec, color=palette[i])
-        # plot std values
-        plt.fill_between(range(len(mean_spec)), lower_bound, upper_bound, color=palette[i], alpha=.1)
-
-    plt.legend(legend_entries, ncol=3, loc='best', title=label_col)
+        plt.fill_between(range(len(mean_spec)), lower_bound, upper_bound,
+                         color=palette[i], alpha=.1, label=f"{key:.2f}_std")
     
     return fig
 
 
-def plot_classwise_kde(df, label_col, labels, palette, legend_entries, feature_idx=0, focus=-1):    
+def plot_classwise_kde(df, label_col, labels, palette=None, feature_idx=0, focus=-1, focus_lw=5):    
+    fig = plt.figure()
+
     focus_label = 'None'
 
     x = df.columns[feature_idx]
@@ -100,16 +100,20 @@ def plot_classwise_kde(df, label_col, labels, palette, legend_entries, feature_i
     if focus>=0:
         focus_label = labels[focus]
 
+    if palette is None:
+        # get all unique labels
+        cntr = Counter(df[label_col])
+        palette = sns.color_palette("bright", len(cntr.keys()))
+
     for i, (key, group) in enumerate(df.groupby(label_col)):
         lw = None # default linewidth
         # plot focused kde with thicker line
         if key == focus_label:
-            lw = 5 # focused linewidth
+            lw = focus_lw # focused linewidth
         
-        fig = sns.kdeplot(data=group, x=x,
-                    linewidth=lw,
-                    color=palette[i])
+        sns.kdeplot(data=group, x=x, linewidth=lw, color=palette[i],
+                          label=f"{key:.2f}")
         
-    plt.legend(legend_entries, ncol=3, loc='best', title=label_col)
+    plt.legend()
     
     return fig
