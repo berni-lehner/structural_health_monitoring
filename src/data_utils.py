@@ -1,6 +1,4 @@
 """The data_utils module provides the Python interfaces to interact with data.
- Acknowledgements for inspiration goes to https://betterprogramming.pub/how-to-know-zip-content-without-downloading-it-87a5b30be20a
-
 """
 
 __author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
@@ -179,4 +177,40 @@ def _load_processed_data(file_name, fb:LogFilterbank, X_col='real', y_col=['y_ca
     df['file'] = [file_name]
     
     
-    return df    
+    return df
+
+
+from data_utils import load_processed_data, FEATURE_LIST
+from LogFilterbank import LogFilterbank
+from feature_utils import extract_dctc
+
+
+def load_synthetic_data(data_path, target_col='y_radius'):
+    # configuration
+    sr = 120000 #originally from df['kHz'].iloc[-1]*1000*2 # from measurement, highest f[kHz]*2
+    n_log_bins = 87
+    n_fft = 1600
+    n_fft_bins = 801
+    f_min = 1300
+    norm = 'height'
+
+    fb = LogFilterbank(sr=sr, n_fft_bins=n_fft_bins, n_log_bins=n_log_bins, f_min=f_min, norm=norm)
+
+    to_dB = True
+
+    file_names = list(data_path.glob('**/*.csv'))
+
+    # cache file for faster data loading on later iterations
+    pickle_name = Path(data_path, f"filtered_specs__fmin_{fb.f_min}__fmax_{fb.f_max}__lbins_{fb.n_log_bins}.pkl")
+
+    df = load_processed_data(file_names, fb, y_col=[FEATURE_LIST[0], FEATURE_LIST[1]], to_dB=to_dB, cache_file=pickle_name)
+    
+    X = df[df.columns[0:fb.n_log_bins]].values
+
+    n_coeffs = 32
+    X_dct = extract_dctc(X=X, n_coeffs=n_coeffs)
+    
+    dct_df = pd.DataFrame(X_dct)
+    dct_df[target_col] = df[target_col]
+    
+    return dct_df, fb
