@@ -19,6 +19,8 @@ HUGE_SIZE = 24
 FIG_SIZE = (22, 8)
 
 def init_plotting():
+    '''
+    '''
     # Matplotlib
     plt.rc('figure', figsize=FIG_SIZE)        # default figure size
     plt.rc('figure', titlesize=HUGE_SIZE)     # fontsize of the figure title
@@ -48,6 +50,8 @@ def init_plotting():
 
     
 def plot_embedding_targets(X_embedded, y, alpha=1., palette=None):
+    '''
+    '''
     fig = plt.figure()
     
     cntr = Counter(y)
@@ -62,6 +66,8 @@ def plot_embedding_targets(X_embedded, y, alpha=1., palette=None):
 
 
 def plot_classwise_dist(df, label_col=None, palette=None):
+    '''
+    '''
     fig = plt.figure()
     
     # last column contains the labels if not handled otherwise
@@ -91,6 +97,8 @@ def plot_classwise_dist(df, label_col=None, palette=None):
 
 
 def plot_classwise_kde(df, label_col, labels, palette=None, feature_idx=0, focus=-1, focus_lw=5):    
+    '''
+    '''
     fig = plt.figure()
 
     focus_label = 'None'
@@ -117,3 +125,54 @@ def plot_classwise_kde(df, label_col, labels, palette=None, feature_idx=0, focus
     plt.legend()
     
     return fig
+
+
+def plot_metrics(metrics: pd.DataFrame):
+    '''
+    '''
+    fig = sns.boxplot(x="model", y="values", hue="metrics", data=metrics)
+    
+    return fig
+
+
+def plot_cv_indices(cv, X, y, ax, lw=10):
+    """
+    """
+    if type(cv) is not list:
+        cv = list(cv.split(X, y)).copy()
+        
+    n_splits = len(cv)
+    
+    # Generate the training/testing visualizations for each CV split
+    for i, (train_idx, test_idx) in enumerate(cv):
+        # translate indices to positions
+        indices = np.array([np.nan] * len(X))
+        indices[test_idx] = 1
+        indices[train_idx] = 0
+
+        ax.scatter(
+            range(len(indices)),
+            [i + 0.5] * len(indices),
+            c=indices,
+            marker="_",
+            lw=lw,
+            cmap=plt.cm.coolwarm,
+            vmin=-0.2,
+            vmax=1.2,
+        )
+
+    cmap_data = plt.cm.Paired
+    ax.scatter(
+        range(len(X)), [i + 1.5] * len(X), c=y, marker="_", lw=lw, cmap=cmap_data
+    )
+
+    yticklabels = list(range(n_splits)) + ["class"]
+    ax.set(
+        yticks=np.arange(n_splits + 1) + 0.5,
+        yticklabels=yticklabels,
+        xlabel="Sample index",
+        ylabel="CV iteration",
+        ylim=[n_splits + 2.2, -0.2],
+    )
+    
+    return ax

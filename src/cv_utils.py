@@ -1,29 +1,58 @@
 import numpy as np
 from collections import Counter
+import itertools
+
 
 from sklearn.model_selection import ShuffleSplit
 
 
 def AnomalyShuffleSplit(Xpos, Xneg, n_splits=5, test_size=.2, random_state=None):
+    '''
+    '''
     # generate splits on positive samples
     splits = ShuffleSplit(n_splits=n_splits, test_size=test_size,
                           random_state=random_state).split(Xpos)
+        
+    # generate splits which combines shuffled indices of positive samples
+    # and always the same negative samples
+    n, m = len(Xpos), len(Xneg)
+    cv = [(train, np.concatenate([test, np.arange(n, n+m)], axis=0)) for train, test in splits]
     
+    return cv
+
+
+def RepeatedAnomalyShuffleSplit(Xpos, Xneg, n_splits=5, test_size=.2,
+                                n_repeats=1, random_state=None):
+    '''
+    '''
+    cv = [AnomalyShuffleSplit(Xpos=Xpos, Xneg=Xneg, n_splits=n_splits, test_size=test_size,
+                              random_state=random_state) for i in range(n_repeats)]
+    
+    # flatten outer list
+    #cv = list(itertools.chain(*cv))
+    
+    return cv
+
+
+def CreateAnomalyData(Xpos, Xneg):
+    '''
+    '''
     # combine to full data set
     X = np.concatenate([Xpos, Xneg], axis=0)
     
     # generate lables according to sklearn standard (1=inlier, -1=outlier)
     y = np.concatenate([np.repeat(1.0, len(Xpos)), np.repeat(-1.0, len(Xneg))])
     
-    # generate splits which combines shuffled indices of positive samples
-    # and always the same negative samples
-    n, m = len(Xpos), len(Xneg)
-    cv = [(train, np.concatenate([test, np.arange(n, n+m)], axis=0)) for train, test in splits]
+    return X, y
     
-    return X, y, cv
 
-
-def dump_cv(cv, y):
+def dump_cv(cv, X=None, y=None):
+    '''
+    '''
+    # assume sklearn interface for cv and yield generator values
+    if type(cv) is not list:
+        cv = list(cv.split(X, y)).copy()
+        
     for i, (train_idx, test_idx) in enumerate(cv):
         print(f"---------cv iteration {i}----------")
         print("train")
