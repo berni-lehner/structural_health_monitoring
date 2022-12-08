@@ -13,6 +13,27 @@ def get_aa_experiment(estimator, n_repeats, name):
     return experiment
 
 
+def aabb_regression_benchmark(X, y,
+                                  models,
+                                  cv=None,
+                                  scoring=None,
+                                  random_state=None):
+    '''
+    '''
+    all_cv_results = []
+    for mdls in models:
+        results = regression_benchmark(X=X, y=y,
+                                            models=mdls,
+                                            cv=cv,
+                                            scoring=scoring,
+                                            random_state=random_state)
+        all_cv_results.append(results)
+        
+    all_cv_results = pd.concat(all_cv_results, ignore_index=True)
+    
+    return all_cv_results
+
+
 def aabb_classification_benchmark(X, y,
                                   models,
                                   cv=None,
@@ -72,8 +93,7 @@ def regression_benchmark(X, y,
         cv = RepeatedKFold(n_splits=5, n_repeats=3)
 
     if scoring is None:
-        scoring = ['neg_mean_absolute_error', 'neg_mean_squared_error',
-                   'r2', 'explained_variance',]
+        scoring = ['r2', 'neg_mean_squared_error',]
     
     results = benchmark(X=X, y=y, models=models,
                         cv=cv,
