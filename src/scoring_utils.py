@@ -1,3 +1,9 @@
+""".
+ 
+"""
+__author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
+
+
 from sklearn.metrics import make_scorer
 from sklearn.metrics import f1_score, roc_auc_score, precision_score, recall_score
 from sklearn.metrics import confusion_matrix

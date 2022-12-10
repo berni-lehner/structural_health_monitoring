@@ -1,5 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
+""".
+ 
+"""
+__author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
 
 
 from scipy.fft import dct

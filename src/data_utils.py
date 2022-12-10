@@ -1,6 +1,5 @@
 """The data_utils module provides the Python interfaces to interact with data.
 """
-
 __author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
 
 
@@ -26,7 +25,15 @@ FEATURE_LIST = ['y_cat', #P Pristine/D Defect: pristine structure (initial struc
                 'y_ec_pwas', #elastic compliance of PWAS material (Sensor) deviation in %, same for all comliance values
                 'y_loss_f', # loss factor (added after simulation)
                ]
-    
+
+# measurement characteristics are separated by underscores:
+REAL_FEATURE_LIST = ['y_cat', #P Pristine/D Defect: pristine structure (initial structure without any damage)/ damaged structure (sandwich structure with circular face layer debonding)
+                'y_radius', #circular face layer debonding with a radial size in [mm])
+                'interference', # normal, finger, bulge, etc...
+                'variant', #additional info (1-4; optional)
+                'comment', #additional info (oval, new, old; optional)
+               ]
+
 def load_raw_data(file_name):
     X_df = pd.read_csv(file_name, header=None, delimiter=',', dtype=np.float32)
     X_df.columns = ['kHz', 'real', 'imag']
@@ -57,6 +64,50 @@ def load_raw_data(file_name):
     return X_df, y_df
 
 
+def load_real_data(file_name):
+    X_df = pd.read_csv(file_name, header=None, delimiter=',', dtype=np.float32)
+    X_df.columns = ['kHz', 'real', 'imag']
+
+    # magnitude spectrum
+    X_df['abs'] = np.abs(X_df['real'].values + 1j*X_df['imag'].values)
+    
+    # name w/o path and extension
+    f_name = file_name.stem if type(file_name) is Path else Path(file_name).stem
+    
+    # naming convention: characteristics are separated by underscore
+    file_parts = f_name.split('_')
+    
+    radius = np.float32(file_parts[0])
+    category = 'P' if radius==0 else 'D'
+
+    variant = ''
+    comment = ''
+    
+    if len(file_parts) > 2:
+        fpart = file_parts[2]
+        if fpart.isdigit():
+            variant = fpart
+        else:
+            comment = fpart
+
+        if len(file_parts) == 4:
+            assert len(comment)==0
+            comment = file_parts[3]
+            
+    y_cat = pd.Series(category, dtype='str')
+    y_radius = pd.Series(radius, dtype='float32')
+    interference = pd.Series(file_parts[1], dtype='str')
+    variant = pd.Series(variant, dtype='str')
+    comment = pd.Series(comment, dtype='str')
+
+    y_df = pd.DataFrame(columns=REAL_FEATURE_LIST)
+    
+    for i,feature in enumerate(REAL_FEATURE_LIST):
+        y_df[feature] = eval(feature)
+         
+    return X_df, y_df
+
+
 def get_log_spec(X, fb:LogFilterbank, to_dB=False):
     log_spec = fb.apply(spec=X, to_dB=to_dB)
     
@@ -68,7 +119,8 @@ def load_processed_data(file_names,
                         X_col='real',
                         y_col=['y_cat'],
                         to_dB=False,
-                        cache_file=None):
+                        cache_file=None,
+                        synthetic=True):
     df = None
     cached = False
     
@@ -83,12 +135,12 @@ def load_processed_data(file_names,
         # str or list of strings
         if(type(file_names) == list):
             # load dataframes into list
-            dfs = [_load_processed_data(file_name, fb, X_col, y_col, to_dB) for file_name in file_names]
+            dfs = [_load_processed_data(file_name, fb, X_col, y_col, to_dB, synthetic) for file_name in file_names]
 
             # concatenate into single dataframe
             df = pd.concat(dfs, ignore_index=True)
         else:
-            df = _load_processed_data(file_names, fb, X_col, y_col, to_dB)
+            df = _load_processed_data(file_names, fb, X_col, y_col, to_dB, synthetic)
     
     # convert entries to be compatible with interfaces like Counter, etc...
     # TODO: maybe there is a better way to do this in one step?
@@ -103,65 +155,12 @@ def load_processed_data(file_names,
     return df
 
 
-def load_raw_specs(file_names,
-                   X_col='real',
-                   y_col=['y_cat'],
-                   cache_file=None):
-    df = None
-    cached = False
-    
-    # try to load from given cache_file ...
-    if cache_file is not None:
-        if Path.exists(cache_file):
-            cached = True
-            df = pd.read_pickle(cache_file)
-            
-    # ... otherwise load from scratch
-    if df is None:
-        # str or list of strings
-        if(type(file_names) == list):
-            # load dataframes into list
-            dfs = [_load_raw_specs(file_name, X_col, y_col) for file_name in file_names]
-
-            # concatenate into single dataframe
-            df = pd.concat(dfs, ignore_index=True)
-        else:
-            df = _load_raw_specs(file_names, X_col, y_col)
-            
-    # convert entries to be compatible with interfaces like Counter, etc...
-    # TODO: maybe there is a better way to do this in one step?
-    if not cached:
-        for col in y_col:
-            df[col] = [y[0] for y in df[col].values]
-    
-    # cache if need be
-    if cache_file is not None and not cached:
-        df.to_pickle(cache_file)
-    
-    return df
-
-
-def _load_raw_specs(file_name, X_col='real', y_col=['y_cat']):
-    X_df, y_df = load_raw_data(file_name)
-
-    # extract features
-    spec = X_df[X_col].values
-        
-    # create new DataFrame containing features
-    col_names = ['spec_' + str(i) for i in range(len(spec))]
-    df = pd.DataFrame(columns=col_names, data=[spec])
-
-    # combine with target variable(s)
-    for col in y_col:
-        df[col] = [y_df[col]]
-        
-    df['file'] = [file_name]
-    
-    return df
-
-
-def _load_processed_data(file_name, fb:LogFilterbank, X_col='real', y_col=['y_cat'], to_dB=False):    
-    X_df, y_df = load_raw_data(file_name)
+def _load_processed_data(file_name, fb:LogFilterbank, X_col='real',
+                         y_col=['y_cat'], to_dB=False, synthetic=True):
+    if synthetic:
+        X_df, y_df = load_raw_data(file_name)
+    else:
+        X_df, y_df = load_real_data(file_name)
 
     # extract features
     log_spec = get_log_spec(X=X_df[X_col].values, fb=fb, to_dB=to_dB)
@@ -180,12 +179,73 @@ def _load_processed_data(file_name, fb:LogFilterbank, X_col='real', y_col=['y_ca
     return df
 
 
+def load_raw_specs(file_names,
+                   X_col='real',
+                   y_col=['y_cat'],
+                   synthetic=True,
+                   cache_file=None):
+    df = None
+    cached = False
+    
+    # try to load from given cache_file ...
+    if cache_file is not None:
+        if Path.exists(cache_file):
+            cached = True
+            df = pd.read_pickle(cache_file)
+            
+    # ... otherwise load from scratch
+    if df is None:
+        # str or list of strings
+        if(type(file_names) == list):
+            # load dataframes into list
+            dfs = [_load_raw_specs(file_name, X_col, y_col, synthetic) for file_name in file_names]
+
+            # concatenate into single dataframe
+            df = pd.concat(dfs, ignore_index=True)
+        else:
+            df = _load_raw_specs(file_names, X_col, y_col, synthetic)
+            
+    # convert entries to be compatible with interfaces like Counter, etc...
+    # TODO: maybe there is a better way to do this in one step?
+    if not cached:
+        for col in y_col:
+            df[col] = [y[0] for y in df[col].values]
+    
+    # cache if need be
+    if cache_file is not None and not cached:
+        df.to_pickle(cache_file)
+    
+    return df
+
+
+def _load_raw_specs(file_name, X_col='real', y_col=['y_cat'], synthetic=True):
+    if synthetic:
+        X_df, y_df = load_raw_data(file_name)
+    else:
+        X_df, y_df = load_real_data(file_name)
+
+    # extract features
+    spec = X_df[X_col].values
+        
+    # create new DataFrame containing features
+    col_names = ['spec_' + str(i) for i in range(len(spec))]
+    df = pd.DataFrame(columns=col_names, data=[spec])
+
+    # combine with target variable(s)
+    for col in y_col:
+        df[col] = [y_df[col]]
+        
+    df['file'] = [file_name]
+    
+    return df
+
+
 from data_utils import load_processed_data, FEATURE_LIST
 from LogFilterbank import LogFilterbank
 from feature_utils import extract_dctc
 
 
-def load_synthetic_data(data_path, target_col='y_radius'):
+def load_preprocessed_data(data_path, target_col='y_radius', synthetic=True):
     # configuration
     sr = 120000 #originally from df['kHz'].iloc[-1]*1000*2 # from measurement, highest f[kHz]*2
     n_log_bins = 87
@@ -199,11 +259,16 @@ def load_synthetic_data(data_path, target_col='y_radius'):
     to_dB = True
 
     file_names = list(data_path.glob('**/*.csv'))
+    print(f"files: {len(file_names)}")
 
     # cache file for faster data loading on later iterations
     pickle_name = Path(data_path, f"filtered_specs__fmin_{fb.f_min}__fmax_{fb.f_max}__lbins_{fb.n_log_bins}.pkl")
 
-    df = load_processed_data(file_names, fb, y_col=[FEATURE_LIST[0], FEATURE_LIST[1]], to_dB=to_dB, cache_file=pickle_name)
+    df = load_processed_data(file_names, fb,
+                             y_col=[FEATURE_LIST[0], FEATURE_LIST[1]],
+                             to_dB=to_dB,
+                             synthetic=synthetic,
+                             cache_file=pickle_name)
     
     X = df[df.columns[0:fb.n_log_bins]].values
 

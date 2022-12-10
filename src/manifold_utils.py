@@ -1,10 +1,6 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 """The manifold_utils module provides interfaces for manifold learning and dimensionality reduction.
  
 """
-
 __author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
 
 

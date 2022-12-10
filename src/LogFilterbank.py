@@ -4,7 +4,6 @@
  Parts of this code were taken and modified from librosa.filters.mel
  https://librosa.org/doc/main/_modules/librosa/filters.html#mel
 """
-
 __author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
 
 

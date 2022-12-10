@@ -1,3 +1,8 @@
+""".
+ 
+"""
+__author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
+
 #import os
 #import pandas as pd
 #import numpy as np

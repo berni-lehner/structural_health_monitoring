@@ -1,3 +1,9 @@
+""".
+ 
+"""
+__author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
+
+
 import numpy as np
 from collections import Counter
 import itertools
