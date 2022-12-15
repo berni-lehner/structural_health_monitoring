@@ -12,7 +12,7 @@ import itertools
 from sklearn.model_selection import ShuffleSplit
 
 
-def AnomalyShuffleSplit(Xpos, Xneg, n_splits=5, test_size=.2, random_state=None):
+def AnomalyShuffleSplit(Xpos, Xneg, n_splits=5, test_size=.2, random_state=None, unseen_only=False):
     '''
     '''
     # generate splits on positive samples
@@ -22,17 +22,21 @@ def AnomalyShuffleSplit(Xpos, Xneg, n_splits=5, test_size=.2, random_state=None)
     # generate splits which combines shuffled indices of positive samples
     # and always the same negative samples
     n, m = len(Xpos), len(Xneg)
-    cv = [(train, np.concatenate([test, np.arange(n, n+m)], axis=0)) for train, test in splits]
+    
+    if unseen_only:
+        cv = [(train, np.arange(n, n+m)) for train, test in splits]
+    else:
+        cv = [(train, np.concatenate([test, np.arange(n, n+m)], axis=0)) for train, test in splits]
     
     return cv
 
 
 def RepeatedAnomalyShuffleSplit(Xpos, Xneg, n_splits=5, test_size=.2,
-                                n_repeats=1, random_state=None):
+                                n_repeats=1, random_state=None, unseen_only=False):
     '''
     '''
     cv = [AnomalyShuffleSplit(Xpos=Xpos, Xneg=Xneg, n_splits=n_splits, test_size=test_size,
-                              random_state=random_state) for i in range(n_repeats)]
+                              random_state=random_state, unseen_only=unseen_only) for i in range(n_repeats)]
     
     # flatten outer list
     #cv = list(itertools.chain(*cv))

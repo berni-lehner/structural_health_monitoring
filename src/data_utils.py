@@ -9,6 +9,8 @@ import numpy as np
 from pathlib import Path
 
 from LogFilterbank import LogFilterbank
+from feature_utils import extract_dctc
+
 
 
 # measurement characteristics are separated by underscores and encoded as follows:
@@ -39,7 +41,7 @@ def load_raw_data(file_name):
     X_df.columns = ['kHz', 'real', 'imag']
 
     # magnitude spectrum
-    X_df['abs'] = np.abs(X_df['real'].values + 1j*X_df['imag'].values)
+    #X_df['abs'] = np.abs(X_df['real'].values + 1j*X_df['imag'].values)
         
     # name w/o path
     f_name = os.path.split(file_name)[1]
@@ -69,7 +71,7 @@ def load_real_data(file_name):
     X_df.columns = ['kHz', 'real', 'imag']
 
     # magnitude spectrum
-    X_df['abs'] = np.abs(X_df['real'].values + 1j*X_df['imag'].values)
+    #X_df['abs'] = np.abs(X_df['real'].values + 1j*X_df['imag'].values)
     
     # name w/o path and extension
     f_name = file_name.stem if type(file_name) is Path else Path(file_name).stem
@@ -117,10 +119,11 @@ def get_log_spec(X, fb:LogFilterbank, to_dB=False):
 def load_processed_data(file_names,
                         fb:LogFilterbank,
                         X_col='real',
-                        y_col=['y_cat'],
+                        y_col=['y_radius'],
                         to_dB=False,
                         cache_file=None,
-                        synthetic=True):
+                        synthetic=True,
+                        calibration_file=None):
     df = None
     cached = False
     
@@ -132,15 +135,20 @@ def load_processed_data(file_names,
             
     # ... otherwise load from scratch
     if df is None:
+        # calibration
+        calibration = None
+        if calibration_file is not None:
+            calibration = pd.read_pickle(calibration_file).values
+
         # str or list of strings
         if(type(file_names) == list):
             # load dataframes into list
-            dfs = [_load_processed_data(file_name, fb, X_col, y_col, to_dB, synthetic) for file_name in file_names]
+            dfs = [_load_processed_data(file_name, fb, X_col, y_col, to_dB, synthetic, calibration) for file_name in file_names]
 
             # concatenate into single dataframe
             df = pd.concat(dfs, ignore_index=True)
         else:
-            df = _load_processed_data(file_names, fb, X_col, y_col, to_dB, synthetic)
+            df = _load_processed_data(file_names, fb, X_col, y_col, to_dB, synthetic, calibration)
     
     # convert entries to be compatible with interfaces like Counter, etc...
     # TODO: maybe there is a better way to do this in one step?
@@ -156,14 +164,21 @@ def load_processed_data(file_names,
 
 
 def _load_processed_data(file_name, fb:LogFilterbank, X_col='real',
-                         y_col=['y_cat'], to_dB=False, synthetic=True):
+                         y_col=['y_radius'], to_dB=False, synthetic=True,
+                         calibration=None):
     if synthetic:
         X_df, y_df = load_raw_data(file_name)
     else:
         X_df, y_df = load_real_data(file_name)
 
     # extract features
-    log_spec = get_log_spec(X=X_df[X_col].values, fb=fb, to_dB=to_dB)
+    spec = X_df[X_col].values
+    
+    if calibration is not None:
+        spec += calibration
+ 
+    # extract features
+    log_spec = get_log_spec(X=spec, fb=fb, to_dB=to_dB)
         
     # create new DataFrame containing features
     col_names = ['logspec_' + str(i) for i in range(fb.n_log_bins)]
@@ -181,9 +196,10 @@ def _load_processed_data(file_name, fb:LogFilterbank, X_col='real',
 
 def load_raw_specs(file_names,
                    X_col='real',
-                   y_col=['y_cat'],
+                   y_col=['y_radius'],
                    synthetic=True,
-                   cache_file=None):
+                   cache_file=None,
+                   calibration_file=None):
     df = None
     cached = False
     
@@ -193,12 +209,17 @@ def load_raw_specs(file_names,
             cached = True
             df = pd.read_pickle(cache_file)
             
+    # calibration
+    calibration = None
+    if calibration_file is not None:
+        calibration = pd.read_pickle(calibration_file).values
+            
     # ... otherwise load from scratch
     if df is None:
         # str or list of strings
         if(type(file_names) == list):
             # load dataframes into list
-            dfs = [_load_raw_specs(file_name, X_col, y_col, synthetic) for file_name in file_names]
+            dfs = [_load_raw_specs(file_name, X_col, y_col, synthetic, calibration) for file_name in file_names]
 
             # concatenate into single dataframe
             df = pd.concat(dfs, ignore_index=True)
@@ -218,7 +239,7 @@ def load_raw_specs(file_names,
     return df
 
 
-def _load_raw_specs(file_name, X_col='real', y_col=['y_cat'], synthetic=True):
+def _load_raw_specs(file_name, X_col='real', y_col=['y_radius'], synthetic=True, calibration=None):
     if synthetic:
         X_df, y_df = load_raw_data(file_name)
     else:
@@ -226,6 +247,9 @@ def _load_raw_specs(file_name, X_col='real', y_col=['y_cat'], synthetic=True):
 
     # extract features
     spec = X_df[X_col].values
+    
+    if calibration is not None:
+        spec += calibration
         
     # create new DataFrame containing features
     col_names = ['spec_' + str(i) for i in range(len(spec))]
@@ -240,21 +264,18 @@ def _load_raw_specs(file_name, X_col='real', y_col=['y_cat'], synthetic=True):
     return df
 
 
-from data_utils import load_processed_data, FEATURE_LIST
-from LogFilterbank import LogFilterbank
-from feature_utils import extract_dctc
 
 
-def load_preprocessed_data(data_path, target_col='y_radius', synthetic=True):
+def load_preprocessed_data(data_path, target_col=['y_radius'], synthetic=True, f_max=None, n_log_bins=87, calibration_file=None):
     # configuration
     sr = 120000 #originally from df['kHz'].iloc[-1]*1000*2 # from measurement, highest f[kHz]*2
-    n_log_bins = 87
+    #n_log_bins = 87
     n_fft = 1600
     n_fft_bins = 801
     f_min = 1300
     norm = 'height'
 
-    fb = LogFilterbank(sr=sr, n_fft_bins=n_fft_bins, n_log_bins=n_log_bins, f_min=f_min, norm=norm)
+    fb = LogFilterbank(sr=sr, n_fft_bins=n_fft_bins, n_log_bins=n_log_bins, f_min=f_min, f_max=f_max, norm=norm)
 
     to_dB = True
 
@@ -265,10 +286,12 @@ def load_preprocessed_data(data_path, target_col='y_radius', synthetic=True):
     pickle_name = Path(data_path, f"filtered_specs__fmin_{fb.f_min}__fmax_{fb.f_max}__lbins_{fb.n_log_bins}.pkl")
 
     df = load_processed_data(file_names, fb,
-                             y_col=[FEATURE_LIST[0], FEATURE_LIST[1]],
+#                             y_col=[FEATURE_LIST[0], FEATURE_LIST[1]],
+                             y_col=target_col,
                              to_dB=to_dB,
                              synthetic=synthetic,
-                             cache_file=pickle_name)
+                             cache_file=pickle_name,
+                             calibration_file=calibration_file)
     
     X = df[df.columns[0:fb.n_log_bins]].values
 

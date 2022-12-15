@@ -84,16 +84,18 @@ def plot_classwise_dist(df, label_col=None, palette=None):
 
     for i, (key, group) in enumerate(df.groupby(label_col)):
         # plot mean values
+        lbl = f"{key:}_mean" if type(df[label_col].values[0])==str else f"{key:.2f}_mean"
         mean_spec = group.drop(columns=label_col).mean(axis=0)
         sns.lineplot(x=range(len(mean_spec)), y=mean_spec, color=palette[i],
-                     label=f"{key:.2f}_mean")
+                     label=lbl)
 
         # plot std values
         std_spec = group.drop(columns=label_col).std(axis=0)
         lower_bound = mean_spec-std_spec
         upper_bound = mean_spec+std_spec
+        lbl = f"{key:}_std" if type(df[label_col].values[0])==str else f"{key:.2f}_std"
         plt.fill_between(range(len(mean_spec)), lower_bound, upper_bound,
-                         color=palette[i], alpha=.1, label=f"{key:.2f}_std")
+                         color=palette[i], alpha=.1, label=lbl)
     
     return fig
 
@@ -121,8 +123,9 @@ def plot_classwise_kde(df, label_col, labels, palette=None, feature_idx=0, focus
         if key == focus_label:
             lw = focus_lw # focused linewidth
         
+        lbl = f"{key:}" if type(df[label_col].values[0])==str else f"{key:.2f}_mean"
         sns.kdeplot(data=group, x=x, linewidth=lw, color=palette[i],
-                          label=f"{key:.2f}")
+                          label=lbl)
         
     plt.legend()
     
