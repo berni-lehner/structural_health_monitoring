@@ -4,6 +4,7 @@ __author__ = ("Bernhard Lehner <https://github.com/berni-lehner>")
 
 
 import os
+import time
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -35,6 +36,33 @@ REAL_FEATURE_LIST = ['y_cat', #P Pristine/D Defect: pristine structure (initial 
                 'variant', #additional info (1-4; optional)
                 'comment', #additional info (oval, new, old; optional)
                ]
+
+
+def init_data(syn_data_path=None, real_data_path=None):
+    from DataDownloader import DataDownloader as ddl
+    
+    # synthetic data
+    if syn_data_path is not None:
+        url = r"https://sandbox.zenodo.org/record/1115172/files/data_synthetic.zip"
+
+        start_time = time.perf_counter()
+        dl_succeed = ddl.download_and_unpack(url, syn_data_path, cache=True)
+        end_time = time.perf_counter()
+        print(f"time passed: {end_time-start_time:.2f} s")
+        print(f"downloading synthetic data successful: {dl_succeed}")
+    
+    # real world data
+    if real_data_path is not None:
+        url = r"https://sandbox.zenodo.org/record/1115172/files/data_realworld.zip"
+
+        start_time = time.perf_counter()
+        dl_succeed = ddl.download_and_unpack(url, real_data_path, cache=True)
+        end_time = time.perf_counter()
+        print(f"time passed: {end_time-start_time:.2f} s")
+        print(f"downloading real world data successful: {dl_succeed}")
+    
+    
+    
 
 def load_raw_data(file_name):
     X_df = pd.read_csv(file_name, header=None, delimiter=',', dtype=np.float32)
@@ -266,7 +294,7 @@ def _load_raw_specs(file_name, X_col='real', y_col=['y_radius'], synthetic=True,
 
 
 
-def load_preprocessed_data(data_path, target_col=['y_radius'], synthetic=True, f_max=None, n_log_bins=87, calibration_file=None):
+def load_preprocessed_data(data_path, target_col=['y_radius'], synthetic=True, f_max=None, n_log_bins=87, calibration_file=None, cache=False):
     # configuration
     sr = 120000 #originally from df['kHz'].iloc[-1]*1000*2 # from measurement, highest f[kHz]*2
     #n_log_bins = 87
@@ -283,7 +311,9 @@ def load_preprocessed_data(data_path, target_col=['y_radius'], synthetic=True, f
     print(f"files: {len(file_names)}")
 
     # cache file for faster data loading on later iterations
-    pickle_name = Path(data_path, f"filtered_specs__fmin_{fb.f_min}__fmax_{fb.f_max}__lbins_{fb.n_log_bins}.pkl")
+    pickle_name = None
+    if cache:
+        pickle_name = Path(data_path, f"filtered_specs__fmin_{fb.f_min}__fmax_{fb.f_max}__lbins_{fb.n_log_bins}.pkl")
 
     df = load_processed_data(file_names, fb,
 #                             y_col=[FEATURE_LIST[0], FEATURE_LIST[1]],
@@ -302,3 +332,89 @@ def load_preprocessed_data(data_path, target_col=['y_radius'], synthetic=True, f
     dct_df[target_col] = df[target_col]
     
     return dct_df, fb
+
+
+
+def load_syn_reg_data(data_path,
+                      f_max=24000,
+                      n_log_bins=66,
+                      min_radius=2.5,
+                      synthetic=True,
+                      cache=False,
+                      calibration_file=None):
+    '''
+    Load data for regression experiments
+    '''
+
+    target_col='y_radius'
+
+    df, fb = load_preprocessed_data(data_path, target_col=[target_col],
+                                    f_max=f_max, n_log_bins=n_log_bins,
+                                    synthetic=synthetic,
+                                    cache=cache,
+                                    calibration_file=calibration_file)
+    
+    # round target values
+    df[target_col] = df[target_col].astype(float).round(1)
+    
+    # drop very small radii
+    df_normal =  df[df[target_col]==0.0]
+    df_anomaly = df[df[target_col]>min_radius]
+
+    Xpos = df_normal.drop(columns=[target_col]).values
+    ypos = df_normal[target_col].values
+
+    Xneg = df_anomaly.drop(columns=[target_col]).values
+    yneg = df_anomaly[target_col].values
+    
+    # merge 0 size and other defect size data
+    X = np.concatenate([Xpos, Xneg], axis=0)
+    y = np.concatenate([ypos, yneg], axis=0)    
+    
+    # skip the 1st feature for stability
+    return X[:,1:], y
+
+
+
+def load_reg_data_base(data_path,
+                       min_radius=2.5,
+                       synthetic=True,
+                       cache=False,
+                       calibration_file=None):
+    
+    file_names = list(data_path.glob('**/*.csv'))
+
+    # cache file for faster data loading on later iterations
+    pickle_name = None
+    if cache:
+        pickle_name = Path(data_path, 'raw_specs.pkl')
+        
+    df = load_raw_specs(file_names=file_names,
+                        synthetic=synthetic,
+                        cache_file=pickle_name,
+                        calibration_file=calibration_file)
+    
+    
+    target_col = 'y_radius'
+    df = df.drop(columns='file')
+
+    # make sure the class labels are sorted for further convenience
+    df = df.sort_values(by=target_col)
+    
+    df[target_col] = df[target_col].astype(float).round(1)
+    
+    # drop very small radii
+    df_normal =  df[df[target_col]==0.0]
+    df_anomaly = df[df[target_col]>min_radius]
+
+    Xpos = df_normal.drop(columns=[target_col]).values
+    ypos = df_normal[target_col].values
+
+    Xneg = df_anomaly.drop(columns=[target_col]).values
+    yneg = df_anomaly[target_col].values
+    
+    # merge 0 size and other defect size data
+    X = np.concatenate([Xpos, Xneg], axis=0)
+    y = np.concatenate([ypos, yneg], axis=0)    
+    
+    return X, y

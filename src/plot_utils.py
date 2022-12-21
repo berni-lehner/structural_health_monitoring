@@ -16,8 +16,8 @@ import seaborn as sns
 # general plot configuration
 SMALL_SIZE = 10
 MEDIUM_SIZE = 16
-LARGE_SIZE = 20
-HUGE_SIZE = 24
+LARGE_SIZE = 24
+HUGE_SIZE = 32
 FIG_SIZE = (22, 8)
 
 def init_plotting():
@@ -27,27 +27,32 @@ def init_plotting():
     plt.rc('figure', figsize=FIG_SIZE)        # default figure size
     plt.rc('figure', titlesize=HUGE_SIZE)     # fontsize of the figure title
     plt.rc('figure', titleweight='bold')      # weight of the figure title
-    #plt.rc('font', size=MEDIUM_SIZE)          # default text sizes
-    #plt.rc('axes', titlesize=LARGE_SIZE)      # fontsize of the axes title
-    #plt.rc('axes', titleweight='bold')        # weight of the axes title
-    #plt.rc('axes', labelsize=MEDIUM_SIZE)     # fontsize of the x and y labels
-    #plt.rc('xtick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
-    #plt.rc('ytick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
-    #plt.rc('legend', fontsize=MEDIUM_SIZE)    # legend fontsize
-    plt.rc('legend', title_fontsize=MEDIUM_SIZE)    # legend fontsize
+    plt.rc('font', size=LARGE_SIZE)          # default text sizes
+    plt.rc('axes', titlesize=LARGE_SIZE)      # fontsize of the axes title
+    plt.rc('axes', titleweight='bold')        # weight of the axes title
+    plt.rc('axes', labelsize=LARGE_SIZE)     # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=LARGE_SIZE)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=LARGE_SIZE)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=LARGE_SIZE)    # legend fontsize
+    plt.rc('legend', title_fontsize=LARGE_SIZE)    # legend fontsize
+    plt.rcParams['figure.dpi'] = 300
+    plt.rcParams['savefig.dpi'] = 300    
+    
     
     # Seaborn
     sns.set(rc={"figure.figsize": FIG_SIZE,
                 "figure.titlesize": HUGE_SIZE,
                 "figure.titleweight": 'bold',
-    #            "font.size": MEDIUM_SIZE,
-    #            "axes.titlesize": LARGE_SIZE,
-    #            "axes.titleweight": 'bold',
-    #            "axes.labelsize": MEDIUM_SIZE,
-    #            "xtick.labelsize": MEDIUM_SIZE,
-    #            "ytick.labelsize": MEDIUM_SIZE,
-    #            "legend.fontsize": MEDIUM_SIZE,
-                "legend.title_fontsize": MEDIUM_SIZE,
+                "font.size": LARGE_SIZE,
+                "axes.titlesize": LARGE_SIZE,
+                "axes.titleweight": 'bold',
+                "axes.labelsize": LARGE_SIZE,
+                "xtick.labelsize": LARGE_SIZE,
+                "ytick.labelsize": LARGE_SIZE,
+                "legend.fontsize": LARGE_SIZE,
+                "legend.title_fontsize": LARGE_SIZE,
+                "figure.dpi": 300,
+                "savefig.dpi": 300,
                })    
 
     

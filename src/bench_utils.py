@@ -10,7 +10,7 @@ from sklearn import model_selection
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import RepeatedKFold
 
-def get_aa_experiment(estimator, n_repeats, name):
+def repeat_experiment(estimator, n_repeats, name):
     '''
     '''
     experiment = [(f"{name}_{i}", estimator) for i in range(n_repeats)]
