@@ -8,6 +8,7 @@ import time
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import pickle
 
 from LogFilterbank import LogFilterbank
 from feature_utils import extract_dctc
@@ -186,7 +187,8 @@ def load_processed_data(file_names,
 
     # cache if need be
     if cache_file is not None and not cached:
-        df.to_pickle(cache_file)
+        with open('path_to_file.pkl', 'rb') as f:
+            df.to_pickle(cache_file, protocol=pickle.HIGHEST_PROTOCOL)
 
     return df
 
@@ -216,8 +218,7 @@ def _load_processed_data(file_name, fb:LogFilterbank, X_col='real',
     for col in y_col:
         df[col] = [y_df[col]]
         
-    df['file'] = [file_name]
-    
+    df['file'] = pd.Series([file_name], dtype="string")    
     
     return df
 
@@ -287,7 +288,7 @@ def _load_raw_specs(file_name, X_col='real', y_col=['y_radius'], synthetic=True,
     for col in y_col:
         df[col] = [y_df[col]]
         
-    df['file'] = [file_name]
+    df['file'] = pd.Series([file_name], dtype="string")
     
     return df
 
