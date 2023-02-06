@@ -138,6 +138,20 @@ def benchmark(X, y,
               random_state=None,
               n_jobs=3):
     '''
+    Evaluates the performance of multiple models using cross-validation.
+
+    Parameters:
+    - X: a NumPy array or Pandas DataFrame containing the training data.
+    - y: a NumPy array or Pandas Series containing the target values.
+    - models: a list of tuples containing the names and instances of the models to be evaluated.
+    - scoring: a string or a list of strings representing the metric(s) to use for evaluation.
+    - cv: an integer or a list of integers representing the number of folds or a list of lists of indices specifying the folds.
+    - groups: a NumPy array or Pandas Series containing group labels for the samples.
+    - random_state: the seed used by the random number generator.
+    - n_jobs: the number of jobs to run in parallel.
+
+    Returns:
+    - A Pandas DataFrame containing the cross-validation results for all models.
     '''
     all_cv_results = []
                
@@ -182,6 +196,17 @@ def benchmark(X, y,
         
 def extract_metrics(results: pd.DataFrame, metrics, sort=None):
     '''
+    Extracts specified metrics from a DataFrame of results and returns them in a new DataFrame.
+    Used foremost in conjunction with Visualization of the results.
+
+    Parameters:
+    - results: a Pandas DataFrame containing the results to be processed.
+    - metrics: a list of strings representing the names of the metrics to extract (columns in results).
+    - sort: a string representing the name of the column to sort the resulting DataFrame by.
+        If not provided, the DataFrame will not be sorted.
+
+    Returns:
+    - A new DataFrame containing only the specified metrics and sorted (if specified).
     '''
     results = pd.melt(results, id_vars=['model'],
                         var_name='metrics', value_name='values')

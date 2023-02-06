@@ -72,10 +72,13 @@ def plot_embedding_targets(X_embedded, y, alpha=1., palette=None):
 
 
 
-def plot_classwise_dist(df, label_col=None, palette=None):
+def plot_classwise_dist(df, x=None, label_col=None, palette=None):
     '''
     '''
     fig = plt.figure()
+    
+    if x is None:
+        x = range(df.shape[1]-1)
     
     # last column contains the labels if not handled otherwise
     if label_col is None:
@@ -91,7 +94,7 @@ def plot_classwise_dist(df, label_col=None, palette=None):
         # plot mean values
         lbl = f"{key:}_mean" if type(df[label_col].values[0])==str else f"{key:.2f}_mean"
         mean_spec = group.drop(columns=label_col).mean(axis=0)
-        sns.lineplot(x=range(len(mean_spec)), y=mean_spec, color=palette[i],
+        sns.lineplot(x=x, y=mean_spec, color=palette[i],
                      label=lbl)
 
         # plot std values
@@ -99,7 +102,7 @@ def plot_classwise_dist(df, label_col=None, palette=None):
         lower_bound = mean_spec-std_spec
         upper_bound = mean_spec+std_spec
         lbl = f"{key:}_std" if type(df[label_col].values[0])==str else f"{key:.2f}_std"
-        plt.fill_between(range(len(mean_spec)), lower_bound, upper_bound,
+        plt.fill_between(x, lower_bound, upper_bound,
                          color=palette[i], alpha=.1, label=lbl)
     
     return fig
@@ -143,6 +146,41 @@ def plot_metrics(metrics: pd.DataFrame):
     fig = sns.boxplot(x="model", y="values", hue="metrics", data=metrics)
     
     return fig
+
+
+def plot_metrics_bar(metrics: pd.DataFrame,
+                     palette="Blues",
+                     ci="sd",
+                     errwidth=3.0,
+                     capsize=.2):
+    '''
+    '''
+    fig = sns.barplot(x="model",
+                      y="values",
+                      hue="metrics",
+                      palette=palette,
+                      data=metrics,
+                      ci=ci,
+                      errwidth=errwidth,
+                      capsize=capsize)
+    
+    return fig
+
+
+def get_metrics_summary(metrics: pd.DataFrame, summaries=['mean', 'std']):
+    '''
+    '''
+    summary = metrics.groupby(['model', 'metrics'])['values'].describe()
+    if summaries is not None:
+        summary = summary[summaries]
+    return summary
+
+def get_sorted_metrics_summary(metrics: pd.DataFrame, summaries=['mean', 'std']):
+    '''
+    '''
+    if summaries is not None:
+        summary = summary[summaries]
+    return summary
 
 
 def plot_cv_indices(cv, X, y, ax, lw=10):

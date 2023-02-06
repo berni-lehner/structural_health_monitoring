@@ -43,7 +43,7 @@ def init_data(syn_data_path=None, real_data_path=None):
     
     # synthetic data
     if syn_data_path is not None:
-        url = r"https://sandbox.zenodo.org/record/1115172/files/data_synthetic.zip"
+        url = r"https://sandbox.zenodo.org/record/1159057/files/data_synthetic.zip"
 
         start_time = time.perf_counter()
         dl_succeed = ddl.download_and_unpack(url, syn_data_path, cache=True)
@@ -53,7 +53,7 @@ def init_data(syn_data_path=None, real_data_path=None):
     
     # real world data
     if real_data_path is not None:
-        url = r"https://sandbox.zenodo.org/record/1115172/files/data_realworld.zip"
+        url = r"https://sandbox.zenodo.org/record/1159057/files/real_world.zip"
 
         start_time = time.perf_counter()
         dl_succeed = ddl.download_and_unpack(url, real_data_path, cache=True)

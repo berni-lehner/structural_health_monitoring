@@ -596,12 +596,16 @@ class SHM_Scoring:
     
     def __init__(self,):
         # corresponds to SYNTH_MSE_RESULTS
-        self.__SYNTH_REL_ERROR = [item.replace('test_mse_', 'test_rel_err_') for item in self.__SYNTH_MSE_RESULTS]
-        self.__SYNTH_ABS_ERROR = [item.replace('test_mse_', 'test_abs_err_') for item in self.__SYNTH_MSE_RESULTS]
+        self.__SYNTH_REL_ERROR = [item.replace('test_mse_', 'test_rel_err_')
+                                  for item in self.__SYNTH_MSE_RESULTS]
+        self.__SYNTH_ABS_ERROR = [item.replace('test_mse_', 'test_abs_err_')
+                                  for item in self.__SYNTH_MSE_RESULTS]
 
         # corresponds to REAL_MSE_RESULTS
-        self.__REAL_REL_ERROR = [item.replace('test_mse_', 'test_rel_err_') for item in self.__REAL_MSE_RESULTS]
-        self.__REAL_ABS_ERROR = [item.replace('test_mse_', 'test_abs_err_') for item in self.__REAL_MSE_RESULTS]
+        self.__REAL_REL_ERROR = [item.replace('test_mse_', 'test_rel_err_')
+                                 for item in self.__REAL_MSE_RESULTS]
+        self.__REAL_ABS_ERROR = [item.replace('test_mse_', 'test_abs_err_')
+                                 for item in self.__REAL_MSE_RESULTS]
         
         
     @property
