@@ -33,8 +33,10 @@ The data and code used in this study are provided in their entirety to enhance c
 TODO
 
 ## Reproducing Results <a name="reproduction"></a>
-1. [Data Exploration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
-2. [Filterbank Design](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
+1.1. [Feature Engineering: Data Exploration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
+1.2. [Feature Engineering: Filterbank Design](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering.ipynb)
+1.3. [Feature Engineering: Discrete Cosine Transform](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering_2.ipynb)
+
 
 
 ## Citation <a name="citation"></a>
