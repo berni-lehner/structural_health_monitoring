@@ -44,7 +44,7 @@ def init_data(syn_data_path=None, real_data_path=None):
     
     # synthetic data
     if syn_data_path is not None:
-        url = r"https://sandbox.zenodo.org/record/1159057/files/data_synthetic.zip"
+        url = r"https://sandbox.zenodo.org/record/1161446/files/data_synthetic.zip"
 
         start_time = time.perf_counter()
         dl_succeed = ddl.download_and_unpack(url, syn_data_path, cache=True)
@@ -54,7 +54,7 @@ def init_data(syn_data_path=None, real_data_path=None):
     
     # real world data
     if real_data_path is not None:
-        url = r"https://sandbox.zenodo.org/record/1159057/files/real_world.zip"
+        url = r"https://sandbox.zenodo.org/record/1161446/files/real_world.zip"
 
         start_time = time.perf_counter()
         dl_succeed = ddl.download_and_unpack(url, real_data_path, cache=True)
@@ -187,8 +187,7 @@ def load_processed_data(file_names,
 
     # cache if need be
     if cache_file is not None and not cached:
-        with open('path_to_file.pkl', 'rb') as f:
-            df.to_pickle(cache_file, protocol=pickle.HIGHEST_PROTOCOL)
+        df.to_pickle(cache_file, protocol=pickle.HIGHEST_PROTOCOL)
 
     return df
 
@@ -263,7 +262,7 @@ def load_raw_specs(file_names,
     
     # cache if need be
     if cache_file is not None and not cached:
-        df.to_pickle(cache_file)
+        df.to_pickle(cache_file, protocol=pickle.HIGHEST_PROTOCOL)
     
     return df
 
@@ -298,7 +297,6 @@ def _load_raw_specs(file_name, X_col='real', y_col=['y_radius'], synthetic=True,
 def load_preprocessed_data(data_path, target_col=['y_radius'], synthetic=True, f_max=None, n_log_bins=87, calibration_file=None, cache=False):
     # configuration
     sr = 120000 #originally from df['kHz'].iloc[-1]*1000*2 # from measurement, highest f[kHz]*2
-    #n_log_bins = 87
     n_fft = 1600
     n_fft_bins = 801
     f_min = 1300
@@ -309,7 +307,7 @@ def load_preprocessed_data(data_path, target_col=['y_radius'], synthetic=True, f
     to_dB = True
 
     file_names = list(data_path.glob('**/*.csv'))
-    print(f"files: {len(file_names)}")
+    #print(f"files: {len(file_names)}")
 
     # cache file for faster data loading on later iterations
     pickle_name = None
