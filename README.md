@@ -26,11 +26,15 @@ The data and code used in this study are provided in their entirety to enhance c
 ## Table of Contents
 1. [Introduction](#introduction)
 1. [Citation](#citation)
+1. [Reproducing Results](#reproduction)
 
 
 ## Introduction <a name="introduction"></a>
 TODO
 
+## Reproducing Results <a name="reproduction"></a>
+1. [Data Exploration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
+2. [Filterbank Design](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
 
 
 ## Citation <a name="citation"></a>
