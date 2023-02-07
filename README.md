@@ -33,8 +33,13 @@ The data and code used in this study are provided in their entirety to enhance c
 TODO
 
 ## Reproducing Results <a name="reproduction"></a>
+The notebooks contain a Colab badge [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)], which can be clicked to open a Colab runtime to reproduce the results without the need to locally install anything. More information about Colab can be found here: [www.tutorialspoint.com/google_colab](https://www.tutorialspoint.com/google_colab/index.htm).
+
+
 1.1. [Feature Engineering: Data Exploration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
+
 1.2. [Feature Engineering: Filterbank Design](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering.ipynb)
+
 1.3. [Feature Engineering: Discrete Cosine Transform](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering_2.ipynb)
 
 
