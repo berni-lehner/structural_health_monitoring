@@ -42,6 +42,18 @@ The notebooks contain a Colab badge [![Open In Colab](https://colab.research.goo
 
 1.3. [Feature Engineering: Discrete Cosine Transform](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering_2.ipynb)
 
+2.1. [Anomaly Detection: Setting up Cross-Validation](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_anomaly_AA.ipynb)
+
+2.2. [Anomaly Detection: Synthetic Data (TODO)]
+
+2.3. [Anomaly Detection: Real-World Data (TODO)]
+
+3.1. [Damage Size Estimation: Setting up Cross-Validation (TODO)]
+
+3.2. [Damage Size Estimation: Synthetic Data (TODO)]
+
+3.3. [Damage Size Estimation: Real-World Data (TODO)]
+
 
 
 ## Citation <a name="citation"></a>
