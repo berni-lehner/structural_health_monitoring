@@ -54,12 +54,16 @@ The notebooks contain a Colab badge [![Open In Colab](https://colab.research.goo
 
 2.3.1. [Anomaly Detection Results: Real-World Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_anomaly_results.ipynb)
 
-3.1. [Damage Size Estimation: Setting up Cross-Validation (TODO)]
+3.1. [Damage Size Estimation: Setting up Cross-Validation](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AA.ipynb)
 
-3.2. [Damage Size Estimation: Synthetic Data (TODO)]
+3.2. [Damage Size Estimation Experiment: Synthetic Data Baseline](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AA_BASE.ipynb)
+     [Damage Size Estimation Experiment: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AB.ipynb)
 
-3.3. [Damage Size Estimation: Real-World Data (TODO)]
+3.2.1. [Damage Size Estimation Results: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_results.ipynb)
 
+3.3. [Damage Size Estimation Experiment: Real-World Data (TODO)]
+
+3.3.1 [Damage Size Estimation Results: Real-World Data (TODO)]
 
 
 
