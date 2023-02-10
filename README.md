@@ -57,7 +57,8 @@ The notebooks contain a Colab badge [![Open In Colab](https://colab.research.goo
 3.1. [Damage Size Estimation: Setting up Cross-Validation](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AA.ipynb)
 
 3.2. [Damage Size Estimation Experiment: Synthetic Data Baseline](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AA_BASE.ipynb)
-     [Damage Size Estimation Experiment: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AB.ipynb)
+
+[Damage Size Estimation Experiment: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AB.ipynb)
 
 3.2.1. [Damage Size Estimation Results: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_results.ipynb)
 
