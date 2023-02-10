@@ -50,7 +50,7 @@ The notebooks contain a Colab badge [![Open In Colab](https://colab.research.goo
 
 2.2.1. [Anomaly Detection Results: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_anomaly_results.ipynb)
 
-2.3. [Anomaly Detection Experiment: Real-World Data (TODO)]
+2.3. [Anomaly Detection Experiment: Real-World Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_anomaly_AB.ipynb)
 
 2.3.1. [Anomaly Detection Results: Real-World Data (TODO)]
 
