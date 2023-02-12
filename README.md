@@ -66,7 +66,7 @@ The notebooks contain a Colab badge [![Open In Colab](https://colab.research.goo
 
 [Damage Size Estimation Experiment: Real-World Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_AB.ipynb)
 
-3.3.1 [Damage Size Estimation Results: Real-World Data (TODO)]
+3.3.1 [Damage Size Estimation Results: Real-World Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_results.ipynb)
 
 
 
