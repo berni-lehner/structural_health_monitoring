@@ -33,40 +33,35 @@ The data and code used in this study are provided in their entirety to enhance c
 TODO
 
 ## Reproducing Results <a name="reproduction"></a>
-The notebooks contain a Colab badge [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)], which can be clicked to open a Colab runtime to reproduce the results without the need to locally install anything. More information about Colab can be found here: [www.tutorialspoint.com/google_colab](https://www.tutorialspoint.com/google_colab/index.htm).
+The notebooks contain a Colab badge ![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg), which can be clicked to open a Colab runtime to reproduce the results without the need to locally install anything. More information about Colab can be found here: [www.tutorialspoint.com/google_colab](https://www.tutorialspoint.com/google_colab/index.htm).
 
+- **Feature Engineering**
+    - [Data Exploration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
+    - [Filterbank Design](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering.ipynb)
+    - [Discrete Cosine Transform](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering_2.ipynb)
+    - [Calibration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_calibration.ipynb)
 
-1.1. [Feature Engineering: Data Exploration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
+- **Anomaly Detection**
+    - Synthetic Data
+        - [Setting up Cross-Validation](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_anomaly_AA.ipynb)
+        - [Experiment](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_anomaly_AB.ipynb)
+        - [Results](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_anomaly_results.ipynb)
 
-1.2. [Feature Engineering: Filterbank Design](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering.ipynb)
+    - Real-World Data
+        - [Experiment](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_anomaly_AB.ipynb)
+        - [Results](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_anomaly_results.ipynb)
 
-1.3. [Feature Engineering: Discrete Cosine Transform](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering_2.ipynb)
+- **Damage Size Estimation**
+    - Synthetic Data
+        - [Setting up Cross-Validation](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AA.ipynb)
+        - [Baseline](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AA_BASE.ipynb)
+        - [Experiment](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AB.ipynb)
+        - [Results](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_results.ipynb)
 
-1.4. [Calibration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_calibration.ipynb)
-
-2.1. [Anomaly Detection: Setting up Cross-Validation](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_anomaly_AA.ipynb)
-
-2.2. [Anomaly Detection Experiment: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_anomaly_AB.ipynb)
-
-2.2.1. [Anomaly Detection Results: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_anomaly_results.ipynb)
-
-2.3. [Anomaly Detection Experiment: Real-World Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_anomaly_AB.ipynb)
-
-2.3.1. [Anomaly Detection Results: Real-World Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_anomaly_results.ipynb)
-
-3.1. [Damage Size Estimation: Setting up Cross-Validation](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AA.ipynb)
-
-3.2. [Damage Size Estimation Experiment: Synthetic Data Baseline](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AA_BASE.ipynb)
-
-[Damage Size Estimation Experiment: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_AB.ipynb)
-
-3.2.1. [Damage Size Estimation Results: Synthetic Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/synthetic_regression_results.ipynb)
-
-3.3. [Damage Size Estimation Experiment: Real-World Data Baseline](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_AA_BASE.ipynb)
-
-[Damage Size Estimation Experiment: Real-World Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_AB.ipynb)
-
-3.3.1 [Damage Size Estimation Results: Real-World Data](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_results.ipynb)
+    - Real-World Data
+        - [Baseline](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_AA_BASE.ipynb)
+        - [Experiment](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_AB.ipynb)
+        - [Results](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_results.ipynb)
 
 
 
