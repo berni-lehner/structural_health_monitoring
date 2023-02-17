@@ -138,41 +138,38 @@ class LogFilterbank(object):
  
         return spec_scaled.T
         
+
+    def bin2freq(self, x:int):
+        return self._fft_freqs[x]
+
+    def freq2bin(self, x:int):
+        bins = np.where(self._fft_freqs <= x)
+            
+        if bins[-1].size > 1:
+            bin = bins[0][-1]
+        else:
+            bin = bins[-1]
+        return bin
+
     
     def plot(self, axs=None) -> None:
         """Plot filterbank.
         """
-        def bin2freq(x):
-            return self._fft_freqs[x.astype(int)]
-
-        def freq2bin(x):
-            print(type(x))
-            print(x)
-            #print(self._fft_freqs.index(x))
-            bins = np.where(self._fft_freqs <= x)
-            
-            if bins[-1].size > 1:
-                bin = bins[0][-1]
-            else:
-                bin = bins[-1]
-            print(bin)
-            return bin
         
 
         if axs is None:
-            fig, axs = plt.subplots(constrained_layout=True, figsize=(12,6))
+            fig, axs = plt.subplots(constrained_layout=True)
        
         axs.plot(self._fft_freqs, self._weights.T)
-        axs.set_xlabel('frequency [Hz]')
-        axs.set_ylabel('weight [1]')
+        axs.set_xlabel('Frequency in Hz')
+        axs.set_ylabel('Weight')
         axs.set_xlim(0, self._fft_freqs[-1])
         
         ax2 = axs.twiny()
         ax2.plot(np.linspace(0,self._n_fft_bins-1,self._n_fft_bins).astype(int), self._weights.T)
         ax2.set_xlim(0, self._n_fft_bins-1)
-        ax2.set_xlabel('bin [1]')
+        ax2.set_xlabel('bin')
         
-        axs.set_title('filterbank')        
         
         
     @property
