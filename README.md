@@ -33,7 +33,10 @@ The data and code used in this study are provided in their entirety to enhance c
 TODO
 
 ## Reproducing Results <a name="reproduction"></a>
-The notebooks contain a Colab badge ![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg), which can be clicked to open a Colab runtime to reproduce the results without the need to locally install anything. More information about Colab can be found here: [www.tutorialspoint.com/google_colab](https://www.tutorialspoint.com/google_colab/index.htm).
+The notebooks contain a Colab badge ![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg), which can be clicked to open a Colab runtime to reproduce the results without the need to locally install anything.
+Notice, that we *intentionally* shut down the notebook in Colab after the required packages and libraries are installed.
+It is necessary to run the notebook again to finish up the installation, and this is not a bug!
+More information about Colab can be found here: [www.tutorialspoint.com/google_colab](https://www.tutorialspoint.com/google_colab/index.htm).
 
 - **Feature Engineering**
     - [Data Exploration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
