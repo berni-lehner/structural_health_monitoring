@@ -41,6 +41,7 @@ More information about Colab can be found here: [www.tutorialspoint.com/google_c
 - **Feature Engineering**
     - [Data Exploration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_exploration.ipynb)
     - [Filterbank Design](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering.ipynb)
+        - [Filterbank Tutorial](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/filterbank_demo.ipynb)
     - [Discrete Cosine Transform](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/feature_engineering_2.ipynb)
     - [Calibration](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/data_calibration.ipynb)
 
@@ -66,6 +67,7 @@ More information about Colab can be found here: [www.tutorialspoint.com/google_c
         - [Experiment](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_AB.ipynb)
         - [Results](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/mixed_regression_results.ipynb)
 
+- [**Method Summary**](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/method.ipynb)
 
 
 ## Citation <a name="citation"></a>
