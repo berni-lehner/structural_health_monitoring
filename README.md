@@ -1,10 +1,11 @@
 # structural_health_monitoring (WORK IN PROGRESS)
 
-[Project](https://zenodo.org/record/) **|** [Paper](https://)
+[Data](https://zenodo.org/record/6758723) **|** [Paper](https://)
 
 
 [Christoph Kralovec](https://www.jku.at/en/institute-of-structural-lightweight-design/team/christoph-kralovec/),
 [Bernhard Lehner](https://www.researchgate.net/profile/Bernhard_Lehner),
+M. Kirchmayr,
 [Martin Schagerl](https://www.jku.at/en/institute-of-structural-lightweight-design/team/martin-schagerl/),
 
 Sandwich Face Layer Debonding Detection and Size Estimation
