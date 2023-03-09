@@ -1,15 +1,16 @@
-# structural_health_monitoring (WORK IN PROGRESS)
+# structural_health_monitoring
 
-[Project](https://zenodo.org/record/) **|** [Paper](https://)
+[Data](https://zenodo.org/record/6758723) **|** [Paper](https://www.mdpi.com/1424-8220/23/6/2910)
 
 
 [Christoph Kralovec](https://www.jku.at/en/institute-of-structural-lightweight-design/team/christoph-kralovec/),
 [Bernhard Lehner](https://www.researchgate.net/profile/Bernhard_Lehner),
+M. Kirchmayr,
 [Martin Schagerl](https://www.jku.at/en/institute-of-structural-lightweight-design/team/martin-schagerl/),
 
 Sandwich Face Layer Debonding Detection and Size Estimation
 by Machine Learning-based evaluation of Electromechanical
-Impedance Measurements, Sensors, 2023
+Impedance Measurements, Sensors 2023, 23, 2910. https://doi.org/10.3390/s23062910
 
 ## Abstract
 The present research proposes a two-step physics- and machine learning (ML)-based electromechanical impedance (EMI) measurement data evaluation approach for sandwich face layer debonding detection and size estimation in structural health monitoring applications.
@@ -25,12 +26,12 @@ The data and code used in this study are provided in their entirety to enhance c
 
 ## Table of Contents
 1. [Introduction](#introduction)
-1. [Citation](#citation)
 1. [Reproducing Results](#reproduction)
+1. [Citation](#citation)
 
 
 ## Introduction <a name="introduction"></a>
-TODO
+
 
 ## Reproducing Results <a name="reproduction"></a>
 The notebooks contain a Colab badge ![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg), which can be clicked to open a Colab runtime to reproduce the results without the need to locally install anything.
@@ -69,6 +70,8 @@ More information about Colab can be found here: [www.tutorialspoint.com/google_c
 
 - [**Method Summary**](https://github.com/berni-lehner/structural_health_monitoring/blob/main/notebooks/method.ipynb)
 
+- **Resultfiles** from our experiments can be downloaded [here](https://zenodo.org/record/6758723/files/results.zip)
+
 
 ## Citation <a name="citation"></a>
 If you find the code and datasets useful in your research, please cite:
@@ -77,10 +80,10 @@ If you find the code and datasets useful in your research, please cite:
          title={Sandwich Face Layer Debonding Detection and Size Estimation by Machine Learning-based evaluation of Electromechanical Impedance Measurements},
          author={Kralovec, C. and Lehner, B. and Kirchmayr, M. and Schagerl, M.},
          journal={Sensors},
-         pages={--},
+         pages={2910},
          year={2023}
-         volume={1},
-         number={1},
+         volume={23},
+         number={6},
          year={2023},
          publisher={MDPI}
     }    
